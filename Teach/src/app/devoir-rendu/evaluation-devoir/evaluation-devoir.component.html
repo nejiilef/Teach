@@ -1,0 +1,54 @@
+<!-- <body>
+  <div class="evaluation-page">
+    <div class="form">
+      <form class="evaluation-form" (ngSubmit)="onSubmitEvaluation(f)" #f="ngForm">
+        <h2>Évaluation du Devoir</h2>
+  
+        <div class="form-group">
+          <label for="note">Note globale :</label>
+          <input type="number" id="note" [(ngModel)]="evaluation.note" name="note" required>
+        </div>
+  
+        <div class="form-group">
+          <label for="commentaire">Commentaire :</label>
+          <textarea id="commentaire" [(ngModel)]="evaluation.commentaire" name="commentaire" required></textarea>
+  </div>
+  
+        <button type="submit" class="submit-button">Soumettre l'Évaluation</button>
+      </form>
+    </div>
+  </div>
+</body> -->
+<body>
+  <div class="evaluation-page">
+  <div class="form">
+<form [formGroup]="evaluationForm" (ngSubmit)="onSubmit()">
+  <div formArrayName="exercices">
+    <div *ngFor="let exercice of exercicesArray.controls; let i = index" [formGroupName]="i">
+      <label>{{ exercices[i].name }} (Max : {{ exercices[i].maxNote }})</label>
+      <input
+        type="number"
+        formControlName="note"
+        [max]="exercices[i].maxNote!"
+        [min]="0"
+        required
+      />
+      <div *ngIf="exercice.get('note')?.invalid && exercice.get('note')?.touched" class="control">
+        <small *ngIf="exercice.get('note')?.errors?.['required']">La note est obligatoire.</small>
+        <small *ngIf="exercice.get('note')?.errors?.['min']">La note ne peut pas être inférieure à 0.</small>
+        <small *ngIf="exercice.get('note')?.errors?.['max']">La note dépasse le maximum autorisé.</small>
+      </div>
+    </div>
+  </div>
+
+  <!-- Champ désactivé pour afficher la note totale -->
+  <div>
+    <label>Note Totale :</label>
+    <input type="number" [value]="totalNote" disabled />
+  </div>
+
+  <button type="submit" [disabled]="evaluationForm.invalid">Soumettre</button>
+</form>
+</div>
+  </div>
+</body>

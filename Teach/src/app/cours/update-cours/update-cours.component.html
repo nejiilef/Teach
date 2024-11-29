@@ -17,28 +17,30 @@
 <div class="login-page">
   <div class="form" >
    
-    <form class="login-form" method="post" [formGroup]="UpdateCoursForm" (ngSubmit)="updateCours()">
-      <h2><i class="fa-solid fa-pen-to-square"></i> Modifier cours</h2>
-      <br>
-      
-        <input type="text" class="form-control" id="prenom" name="prenom" formControlName="prenom" [hidden]="true">
-        
-      
-  
-        <input type="text" class="form-control" id="prenom" name="prenom" formControlName="prenom" [hidden]="true">
-       
-     
-      <input type="text" class="form-control" id="nom" name="nom" formControlName="nom" placeholder="Nom">
-<input type="number" class="form-control" id="coefficient" name="coefficient" formControlName="coefficient" placeholder="Coefficient">
-
-        <input type="number" class="form-control" id="credits" name="credits"   formControlName="credits" placeholder="Credits">
     
       
-     <br>
-      <button type="submit" name="send2" >Modifier</button>
+       
+        <form [formGroup]="UpdateCoursForm" (ngSubmit)="updateCours()">
+          <input type="text" class="form-control" id="prenom" name="prenom" formControlName="prenom" [hidden]="true">
+       
+          <input type="text" class="form-control" id="nom" formControlName="nom" placeholder="Nom">
+          <div *ngIf="UpdateCoursForm.get('nom')?.invalid && submitted" class="text-danger">
+              Le nom du cours est requis.
+          </div>
+          
+          <input type="number" class="form-control" id="coefficient" formControlName="coefficient" placeholder="Coefficient">
+          <div *ngIf="UpdateCoursForm.get('coefficient')?.invalid && submitted" class="text-danger">
+              Le coefficient est requis et doit être un nombre.
+          </div>
       
+          <input type="number" class="form-control" id="credits" formControlName="credits" placeholder="Credits">
+          <div *ngIf="UpdateCoursForm.get('credits')?.invalid && submitted" class="text-danger">
+              Les crédits sont requis et doivent être un nombre.
+          </div>
       
-    </form>
+          <button type="submit" [disabled]="UpdateCoursForm.invalid">Modifier</button>
+      </form>
+      
   </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

@@ -21,8 +21,20 @@
             <input type="text" placeholder="nom" formControlName="nom" />
             <input type="text" placeholder="prenom" formControlName="prenom" />
 			<input type="email" placeholder="Email" formControlName="email" />
+			<div *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched">
+				<p *ngIf="registerForm.get('email')?.hasError('required')">L'email est requis.</p>
+				<p *ngIf="registerForm.get('email')?.hasError('email')">Format d'email invalide.</p>
+			  </div>
 			<input type="password" placeholder="Mot de passe" formControlName="motDePasse"/>
+			<div *ngIf="registerForm.get('motDePasse')?.invalid && registerForm.get('motDePasse')?.touched">
+				<p *ngIf="registerForm.get('motDePasse')?.hasError('required')">Le mot de passe est requis.</p>
+				<p *ngIf="registerForm.get('motDePasse')?.hasError('minlength') || registerForm.get('motDePasse')?.hasError('pattern')">Le mot de passe doit comporter au moins 8 caractères et doit contenir au moins une lettre, un chiffre et un caractère spécial.</p>
+				</div>
 			<input type="password" placeholder="Confirmation" formControlName="confirmPassword" />
+			<div *ngIf="registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched">
+				<p *ngIf="registerForm.get('confirmPassword')?.hasError('required')">La confirmation du mot de passe est requise.</p>
+				<p *ngIf="registerForm.get('confirmPassword')?.hasError('passwordMismatch')">Les mots de passe ne correspondent pas.</p>
+			  </div>
 			<a href="#" *ngIf=!test [routerLink]="['/auth','register','enseignant']">S'inscrire en tant qu'enseignant</a>
             <a href="#" *ngIf=test [routerLink]="['/auth','register','etudiant']">S'inscrire en tant qu'étudiant</a>
 			<button type="submit" [disabled]="registerForm.invalid">S'inscrir</button>

@@ -35,8 +35,10 @@ test!:boolean
    
     this.registerForm = this.fb.group({
     
-      email: ['', [Validators.required]],
-      motDePasse: ['', [Validators.required]],
+      email: ['', [Validators.required,Validators.email]],
+      motDePasse: ['', [Validators.required, Validators.minLength(8),
+        Validators.pattern('^(?=.*[A-Za-z])(?=.*\\d)(?=.*[!@#$%^&*(),.?":{}|<>])[A-Za-z\\d!@#$%^&*(),.?":{}|<>]{8,}$') // Mot de passe avec une lettre, un chiffre et un caractère spécial
+    ]],
       confirmPassword: ['', [Validators.required]],
       nom:['', [Validators.required]],
       prenom :['', [Validators.required]],

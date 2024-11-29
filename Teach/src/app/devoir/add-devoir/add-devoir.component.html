@@ -15,11 +15,20 @@
           <form class="login-form" (ngSubmit)="onSubmit(f)" #f="ngForm">
             <h2><i class="fa-regular fa-square-plus"></i> Nouveau Devoir </h2>
             
-            <!-- Champs description, ponderation, maxDocuments -->
-            <input type="text" placeholder="description" class="form-control" name="description" ngModel required />
-            <input type="number" placeholder="ponderation" class="form-control" name="ponderation" ngModel required />
-            <input type="number" placeholder="Max Documents" class="form-control" name="maxDocuments" ngModel required />
-            
+            <input type="text" placeholder="description" class="form-control" name="description" ngModel required #description="ngModel" />
+<div *ngIf="description.invalid && description.touched" class="alert alert-danger">
+  La description est obligatoire.
+</div>
+
+<input type="number" placeholder="ponderation" class="form-control" name="ponderation" ngModel required min="1" #ponderation="ngModel" />
+<div *ngIf="ponderation.invalid && ponderation.touched" class="alert alert-danger">
+  La ponderation doit être un nombre positif et est obligatoire.
+</div>
+
+<input type="number" placeholder="Max Documents" class="form-control" name="maxDocuments" ngModel required min="1" #maxDocuments="ngModel" />
+<div *ngIf="maxDocuments.invalid && maxDocuments.touched" class="alert alert-danger">
+  Le nombre maximal de documents doit être un nombre positif et est obligatoire.
+</div>
             <!-- Champ pour la note du devoir -->
             <div>
                 <label for="totalDevoir">Devoir sur combien ? :</label>
@@ -77,8 +86,17 @@
             </div>
 
             <!-- Date Limite -->
-            <input type="date" placeholder="Date Limite" class="form-control" name="dateLimite" ngModel required />
-            <button type="button" (click)="showSousGroupes = !showSousGroupes">
+            <input type="date" 
+       placeholder="Date Limite" 
+       class="form-control" 
+       name="dateLimite" 
+       ngModel 
+       required 
+       [min]="minDate" 
+       #dateLimite="ngModel" />
+<div *ngIf="dateLimite.invalid && dateLimite.touched" class="alert alert-danger">
+  La date limite est obligatoire.
+</div> <button type="button" (click)="showSousGroupes = !showSousGroupes">
                 {{ showSousGroupes ? 'Masquer Sous-groupes' : 'Ajouter Sous-groupes' }}
               </button>
             <!-- PickList pour SousGroupes -->

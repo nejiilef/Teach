@@ -23,7 +23,7 @@ export class AddDevoirComponent implements OnInit{
   showSumOfQuestionsAlert: boolean = false;
   showSumOfExercisesAlert: boolean = false;
  
-
+  minDate: string;
   exercices: {
     description: string;
     note: number;
@@ -31,7 +31,11 @@ export class AddDevoirComponent implements OnInit{
     questions: { text: string; note: number }[];
   }[] = [];
 
-  constructor(private service: DevoirService, private router: Router, private serviceSousGroupe: SousGroupeService) {}
+  constructor(private service: DevoirService, private router: Router, private serviceSousGroupe: SousGroupeService) {
+    const today = new Date();
+    this.minDate = today.toISOString().split('T')[0];  // Format 'YYYY-MM-DD'
+  
+  }
 
   ngOnInit(): void {
     this.serviceSousGroupe.getAllSousgroupes(+localStorage.getItem("idCours")!).subscribe((sg) => {

@@ -84,7 +84,7 @@ public class DevoirRenduService implements IDevoirRenduService{
 
 	public boolean checkDevoirRendu(Long idDevoir, String email) {
 	    return this.getAllDevoirsRendu(idDevoir).stream()
-	               .anyMatch(devoirR -> devoirR.getEtudiant().getEmail().equals(email));
+	               .anyMatch(devoirR -> devoirR.getEtudiant().getEmail().equals(email) && devoirR.getPdfs()!=null);
 	}
 
 	@Override
@@ -195,8 +195,8 @@ public class DevoirRenduService implements IDevoirRenduService{
 	public DevoirRendu evaluerDevoir(EvaluationDTO evaluationDTO) {
 	    DevoirRendu devoirRendu = devoirRenduRepository.findById(evaluationDTO.getIdDevoirRendu())
 	            .orElseThrow(() -> new IllegalArgumentException("Devoir rendu non trouvé"));
-
-	    devoirRendu.setNote(evaluationDTO.getNote());
+float p=devoirRendu.getDevoir().getPonderation();
+	    devoirRendu.setNote(evaluationDTO.getNote()*p);
 	    devoirRendu.setCommentaire(evaluationDTO.getCommentaire());
 
 	    

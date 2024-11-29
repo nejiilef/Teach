@@ -69,5 +69,10 @@ export class ListSousGroupesComponent implements OnInit {
       }
     });
   }
-  
+  toggleEtudiants(idSousGroupe: number) {
+    const subgroup = this.sgList.find(sg => sg.idSousGroupe === idSousGroupe);
+    if (subgroup) {
+      subgroup.showEtudiants = !subgroup.showEtudiants; // Toggle visibility
+    }
+  }
 }

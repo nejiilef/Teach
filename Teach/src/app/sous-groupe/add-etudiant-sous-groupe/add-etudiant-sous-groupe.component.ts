@@ -17,27 +17,30 @@ export class AddEtudiantSousGroupeComponent implements OnInit{
   etudiants!:any[];
   idSg!:number;
   ngOnInit(): void {
-    
-    this.serviceCours.getCoursById(+localStorage.getItem("idCours")!).subscribe((c)=>{
-      this.allEtudiants=c?.students!
-      this.activatedRoute.params.subscribe(
-        parametres=>{
-          this.idSg=+parametres['id'];
-       } )
-       
-       this.service.getSousgroupeById(this.idSg).subscribe((sg) => {
-        this.allEtudiantsSg = sg?.etudiants || [];
-        
-        this.etudiants = this.allEtudiants.filter(etudiant =>
-          !this.allEtudiantsSg.some(sgEtudiant => sgEtudiant.id === etudiant.id)
-        );
-        console.log(this.etudiants)
-      });
-     })
-     
-    
-    
+    this.serviceCours.getCoursById(+localStorage.getItem("idCours")!).subscribe((c) => {
+      if (c ) {
+        this.allEtudiants = c.students;
+        console.log(c)
+        this.activatedRoute.params.subscribe((parametres) => {
+          this.idSg = +parametres['id'];
+          console.log(+parametres['id']);
+        });
+  
+        this.service.getSousgroupeById(this.idSg).subscribe((sg) => {
+          if (sg) {
+            this.allEtudiantsSg = sg.etudiants || [];
+            console.log(this.allEtudiantsSg);
+            this.etudiants = this.allEtudiants.filter(etudiant =>
+              !this.allEtudiantsSg.some(sgEtudiant => sgEtudiant.id == etudiant.id)
+            );
+            console.log(this.etudiants);
+            console.log(this.etudiants);
+          }
+        });
+      }
+    });
   }
+  
   selectedEmail: string | undefined;
 ajouterEtudiant(f: NgForm) {
   

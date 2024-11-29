@@ -26,5 +26,8 @@ public interface IcourService {
 	public Document getDocumentById(Long documentId);
 	public Cour getCoursById(Integer id);
 	public List<Cour> getCoursesForInvitedTeacher(String teacherEmail);
+
+	 public float calculMoyenne(int idCour, String email);
+	 public float calculMoyenneGenerale(String email);
 	 
 }

@@ -29,6 +29,7 @@ import com.project.app.models.Document;
 import com.project.app.models.Enseignant;
 import com.project.app.repository.CourRepository;
 import com.project.app.repository.EnseignantRepository;
+import com.project.app.services.jwt.EmailService;
 import com.project.app.services.jwt.IcourService;
 
 
@@ -44,7 +45,14 @@ public class CourController {
 	@Autowired
 	private EnseignantRepository enseignantRepository;
 	
+	@Autowired
+    private EmailService emailService;
 
+    @GetMapping("/send")
+    public String sendTestEmail() {
+        emailService.sendReminder("nejilamisse@gmail.com", "Test Subject", "Test email body.");
+        return "Email envoyé !";
+    }
 	
 	@PostMapping(value="/addcour/{usernameEns}")
 	public Cour addUser(@RequestBody CourDTO courDTO,@PathVariable("usernameEns") String usernameEns ) {
@@ -184,5 +192,13 @@ public class CourController {
 			} 
 		return ResponseEntity.ok(documents);
 		}
+    @GetMapping("/moyenne/{courId}/{email}")
+    public float calculMoyenne(@PathVariable Integer courId,@PathVariable String email) {
+    	return this.courserv.calculMoyenne(courId, email);
+    }
+    @GetMapping("/moyenneGenerale/{email}")
+    public float calculMoyenneGenerale(@PathVariable String email) {
+    	return this.courserv.calculMoyenneGenerale( email);
+    }
 
 }

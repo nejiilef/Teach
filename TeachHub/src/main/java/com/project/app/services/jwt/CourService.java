@@ -21,6 +21,8 @@ import com.project.app.models.Document;
 import com.project.app.models.Enseignant;
 import com.project.app.models.Etudiant;
 import com.project.app.repository.CourRepository;
+import com.project.app.repository.DevoirRenduRepository;
+import com.project.app.repository.DevoirRepository;
 import com.project.app.repository.DocumentRepository;
 import com.project.app.repository.EnseignantRepository;
 import com.project.app.repository.EtudiantRepository;
@@ -42,7 +44,10 @@ public class CourService implements IcourService {
     EtudiantRepository etudiantRepository;
 	@Autowired
     private DocumentRepository documentRepository;
-
+	@Autowired
+    private DevoirRepository devoirRepository;
+	@Autowired
+    private DevoirRenduRepository devoirRenduRepository;
     private final String uploadDir = "uploads/";
 
     public Document uploadDocument(MultipartFile file, Integer courId, Long enseignantId) throws Exception {
@@ -179,6 +184,47 @@ public class CourService implements IcourService {
 	        return courrep.findByInvitedTeachersContains(teacher);
 	    }
 	    return new ArrayList<>();
+	}
+	public float calculMoyenne(int idCour, String email) {
+	    final float[] somme = {0}; // Utilisation d'un tableau pour encapsuler la variable
+	    final int[] nb = {0}; // Même chose pour le compteur
+
+	    this.devoirRepository.findAll().forEach(d -> {
+	        if (d.getCours().getIdCours() == idCour) {
+	            this.devoirRenduRepository.findAll().forEach(dr -> {
+	                if (dr.getDevoir().getIdDevoir() == d.getIdDevoir()) {
+	                    if (dr.getEtudiant().getEmail().equals(email)) {
+	                    	if(dr.getNote()!=null) {
+	                        somme[0] += dr.getNote(); // Accès à l'élément du tableau
+	                        nb[0]++; // Incrémentation du compteur
+	                    }}
+	                }
+	            });
+	        }
+	    });
+
+	    System.out.print(somme[0]);
+	    System.out.print(nb[0]);
+	    return nb[0] > 0 ? somme[0] / nb[0] : 0; // Évite la division par zéro
+	}
+
+	@Override
+	public float calculMoyenneGenerale(String email) {
+		// TODO Auto-generated method stub
+		final float[] somme = {0}; // Utilisation d'un tableau pour encapsuler la variable
+	    final int[] nb = {0}; // Même chose pour le compteur
+
+		this.courrep.findAll().forEach(c->{
+			c.getStudents().forEach(e->{
+				if(e.getEmail().equals(email)) {
+					somme[0] +=this.calculMoyenne(c.getIdCours(), email)*(c.getCoefficient());
+					 nb[0]+=c.getCoefficient();
+				}
+			});
+		});
+		System.out.print(somme[0]);
+	    System.out.print(nb[0]);
+	    return nb[0] > 0 ? somme[0] / nb[0] : 0;
 	}
 
 }

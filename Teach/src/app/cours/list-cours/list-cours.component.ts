@@ -11,6 +11,9 @@ import { forkJoin } from 'rxjs';
   styleUrls: ['./list-cours.component.css']
 })
 export class ListCoursComponent {
+  moyenne!: number; // Cette variable contiendra la valeur calculée.
+  moyennes: { [idCours: number]: number } = {};
+
   btStyle = {'border-radius': '4px', 'text-align': 'center'};
   coursList: any[] = [];
   courseCode: string = '';
@@ -29,34 +32,40 @@ export class ListCoursComponent {
   ngDoCheck(): void {
     
   }
-
   ngOnInit(): void {
-     
     this.test = localStorage.getItem('role') !== 'etudiant';
     const role = localStorage.getItem('role');
-  const userId = localStorage.getItem('id');
-  const userEmail = localStorage.getItem('email');
-  
-  if (role === 'enseignant' && userId && userEmail) {
-    forkJoin([
-      this.service.getCoursByEnseignantId(+userId),
-      this.service.getCoursesForInvitedTeacher(userEmail)
-    ]).subscribe(
-      ([coursPrincipaux, coursInvites]) => {
-        this.coursList = [...coursPrincipaux, ...coursInvites];
-      },
-      (error) => console.error('Erreur lors de la récupération des cours', error)
-    );
-  } else if (role === 'etudiant' && userId) {
-    this.service.getCoursByStudentId(+userId).subscribe(
-      (cours) => {
-        this.coursList = cours;
-      },
-      (error) => console.error('Erreur lors de la récupération des cours pour l\'étudiant', error)
-    );
+    const userId = localStorage.getItem('id');
+    const userEmail = localStorage.getItem('email');
+    
+    if (role === 'enseignant' && userId && userEmail) {
+      forkJoin([
+        this.service.getCoursByEnseignantId(+userId),
+        this.service.getCoursesForInvitedTeacher(userEmail)
+      ]).subscribe(
+        ([coursPrincipaux, coursInvites]) => {
+          this.coursList = [...coursPrincipaux, ...coursInvites];
+          this.coursList.forEach((cours) => {
+            this.calculMoyenne(cours.idCours); // Appelle la fonction pour chaque cours
+          });
+        },
+        (error) => console.error('Erreur lors de la récupération des cours', error)
+      );
+    } else if (role === 'etudiant' && userId) {
+      this.service.getCoursByStudentId(+userId).subscribe(
+        (cours) => {
+          this.coursList = cours;
+          this.coursList.forEach((cours) => {
+            console.log(cours)
+            this.calculMoyenne(cours.idCours); // Appelle la fonction pour chaque cours
+            this.service.calculMoyenneGenerale(localStorage.getItem('email')!).subscribe(m=>this.moyenne=m)
+          });
+        },
+        (error) => console.error('Erreur lors de la récupération des cours pour l\'étudiant', error)
+      );
+    }
   }
-}
-
+  
   
   getCoursesForInvitedTeacher(teacherEmail: string) {
     this.service.getCoursesForInvitedTeacher(teacherEmail).subscribe(
@@ -115,5 +124,25 @@ export class ListCoursComponent {
     }
 
     this.router.navigate(['/cours/deposer-document']);
+  }
+  calculMoyenne(idCours: number): void {
+    const email = localStorage.getItem('email');
+    if (email) {
+      this.service.calculMoyenne(idCours, email).subscribe(
+        (response) => {
+          this.moyennes[idCours] = response; // Stocke la moyenne pour ce cours
+        },
+        (error) => {
+          console.error(`Erreur lors du calcul de la moyenne pour le cours ${idCours}:`, error);
+          this.moyennes[idCours] = 0; // Valeur par défaut en cas d'erreur
+        }
+      );
+    }
+  }
+  
+  showPopup: boolean = false; // Contrôle l'affichage du popup
+ 
+  togglePopup() {
+    this.showPopup = !this.showPopup; // Inverse l'état du popup
   }
 }

@@ -125,6 +125,7 @@ public class DevoirRenduController {
 	        return ResponseEntity.notFound().build();
 	    }
 	}
+	
 
 	@PutMapping("/updateDevoirRendu/{idDevoirRendu}/{email}")
 	public ResponseEntity<DevoirRendu> modifierDevoirRendu(

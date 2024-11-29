@@ -53,7 +53,7 @@ export class SousGroupeService {
     return this.http.delete(BASE_URL+"deletesousgroupe/"+id,{headers:this.headers!, responseType: 'text'})
   }
   getSousgroupeById(id: number): Observable<ISousGroupe | null> {
-
+console.log(+localStorage.getItem("idCours")!)
     return this.getAllSousgroupes(+localStorage.getItem("idCours")!).pipe(
       map(sg => {
         this.sousGroupes=sg;

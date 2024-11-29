@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ICours } from '../model/icours';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -10,11 +10,12 @@ import { ICoursDTO } from '../model/icours-dto';
   templateUrl: './update-cours.component.html',
   styleUrls: ['./update-cours.component.css']
 })
-export class UpdateCoursComponent {
+export class UpdateCoursComponent implements OnInit {
   UpdateCoursForm!: FormGroup;
   cours!: ICours;
   submitted = false;
   role = localStorage.getItem("role");
+
   constructor(
     private formBuilder: FormBuilder,
     private activatedRoute: ActivatedRoute,
@@ -24,10 +25,10 @@ export class UpdateCoursComponent {
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe((parametres) => {
-      this.service.getCoursById(+parametres['id']).subscribe((c) => {
+      const idCours = +parametres['id'];
+      this.service.getCoursById(idCours).subscribe((c) => {
         if (c) {
           this.cours = c;
-          console.log(c)
           this.initializeForm();
         }
       });
@@ -35,33 +36,34 @@ export class UpdateCoursComponent {
   }
 
   initializeForm(): void {
+    // Typing the form group explicitly
     this.UpdateCoursForm = this.formBuilder.group({
-      nom:[this.cours.nom,Validators.required],
-      coefficient: [this.cours.coefficient, Validators.required],
-      credits: [this.cours.credits, Validators.required],
-    
+      nom: [this.cours.nom, [Validators.required]],
+      coefficient: [this.cours.coefficient, [Validators.required, Validators.pattern('^[0-9]+$')]], // Valide que c'est un nombre
+      credits: [this.cours.credits, [Validators.required, Validators.pattern('^[0-9]+$')]], // Valide que c'est un nombre
     });
   }
 
   updateCours(): void {
+    this.submitted = true;
+
     if (this.UpdateCoursForm.invalid) {
-        return;
+      return;
     }
 
     const values = this.UpdateCoursForm.value;
     const updatedCours: ICoursDTO = {
-        nom: values.nom, // Assurez-vous que cela récupère la valeur saisie
-        coefficient: values.coefficient, // Assurez-vous que cela récupère la valeur saisie
-        credits: values.credits, // Ceci fonctionne déjà selon votre code
+      nom: values['nom'], // Accès avec la syntaxe []
+      coefficient: values['coefficient'],
+      credits: values['credits'],
     };
 
     console.log('Updated Cours DTO:', updatedCours); // Vérifiez les valeurs dans la console
 
     this.service.updateCours(updatedCours, this.cours.idCours).subscribe(() => {
-        this.router.navigate(['cours']);
+      this.router.navigate(['cours']);
     });
-}
-
+  }
 
   onSubmit(): void {
     this.submitted = true;

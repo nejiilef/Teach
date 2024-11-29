@@ -11,6 +11,7 @@ import javax.validation.constraints.Future;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -45,7 +46,7 @@ public class Devoir {
     @JoinColumn(name = "id_cours", nullable = false)
     private Cour cours;
     
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "devoir_sousgroupe",
                joinColumns = @JoinColumn(name = "devoir_id"),
                inverseJoinColumns = @JoinColumn(name = "sousgroupe_id"))

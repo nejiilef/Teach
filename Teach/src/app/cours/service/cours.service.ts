@@ -99,5 +99,12 @@ getCoursesForInvitedTeacher(teacherEmail: string): Observable<ICours[]> {
     downloadDocument(documentId: number): Observable<Blob> { 
       return this.http.get(`${BASE_URL}documents/${documentId}`, { responseType: 'blob' }); }
       
+      calculMoyenne(idCours: number, email: string): Observable<number> {
+        return this.http.get<number>(`${BASE_URL}moyenne/${idCours}/${email}`, { headers: this.headers! });
+      }
+      calculMoyenneGenerale(email: string): Observable<number> {
+        return this.http.get<number>(`${BASE_URL}moyenneGenerale/${email}`, { headers: this.headers! });
+      }
+      
   
 }

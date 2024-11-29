@@ -18,6 +18,7 @@ export class ListDevoirRenduComponent implements OnInit{
   ngOnInit(): void {
     this.activatedRoute.params.subscribe((parametres) => {
       this.id = +parametres['id']; // Convert the parameter to a number
+      console.log(+parametres['id']);
       this.service.getAllDevoirsRendu(this.id).subscribe((dev) => {
         this.listDevoirRendu = dev;
         console.log(dev);

@@ -17,14 +17,46 @@
    
     <form class="login-form" method="post" (ngSubmit)="onSubmit(f)" #f="ngForm">
       <h2><i class="fa-regular fa-square-plus"></i> Nouveau cours </h2>
-      <input type="text" placeholder="Nom" class="form-control" id="nom" name="nom" ngModel  required #c="ngModel" />
-      <input type="number" placeholder="Coefficient" class="form-control" id="nom" name="coefficient" ngModel  required #c="ngModel" />
-      <input type="number" placeholder="Credits" class="form-control" id="nom" name="credits" ngModel  required #c="ngModel" />
-     
-      <br>
-      <button type="submit" name="send2" >Ajouter</button>
       
+      <input type="text" placeholder="Nom" class="form-control" id="nom" name="nom" ngModel required #nom="ngModel" />
+      
+      <input 
+        type="number" 
+        placeholder="Coefficient" 
+        class="form-control" 
+        id="coefficient" 
+        name="coefficient" 
+        ngModel 
+        required 
+        min="1" 
+        #coefficient="ngModel" 
+        [ngClass]="{'is-invalid': coefficient.invalid && coefficient.touched}" 
+      />
+      <div *ngIf="coefficient.invalid && coefficient.touched" class="invalid-feedback">
+        Le coefficient doit être un nombre positif.
+      </div>
+    
+      <input 
+        type="number" 
+        placeholder="Credits" 
+        class="form-control" 
+        id="credits" 
+        name="credits" 
+        ngModel 
+        required 
+        min="1" 
+        max="10" 
+        #credits="ngModel" 
+        [ngClass]="{'is-invalid': credits.invalid && credits.touched}" 
+      />
+      <div *ngIf="credits.invalid && credits.touched" class="invalid-feedback">
+        Les crédits doivent être entre 1 et 10.
+      </div>
+      
+      <br>
+      <button type="submit" [disabled]="f.invalid">Ajouter</button>
     </form>
+    
   </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

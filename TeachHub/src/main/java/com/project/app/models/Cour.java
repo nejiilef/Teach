@@ -35,19 +35,18 @@ public class Cour {
 
     @ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name="enseignant_id")
-    @JsonIgnore
+    
     private Enseignant enseignant;
     
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "course_student",joinColumns = @JoinColumn(name = "course_id"),inverseJoinColumns = @JoinColumn(name = "student_id")
     )
-    @JsonIgnore
     private Set<Etudiant> students = new HashSet<>();
     
     @ManyToMany
     @JoinTable(name = "course_teachers",joinColumns = @JoinColumn(name = "course_id"),inverseJoinColumns = @JoinColumn(name = "teacher_id")
     )
-    @JsonIgnore
+    
     private Set<Enseignant> invitedTeachers = new HashSet<>();
     
     @OneToMany

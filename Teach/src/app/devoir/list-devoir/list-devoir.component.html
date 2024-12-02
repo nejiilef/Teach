@@ -292,6 +292,12 @@ input[type="file"]::file-selector-button:hover {
           <div *ngIf="invitationTeacherError" class="error-message">{{ invitationTeacherError }}</div>
         </div>
       </div>
+      <div class="button-wrap"   *ngIf="role === 'enseignant'">
+        <!-- Bouton Liste des Étudiants dans le contenu principal -->
+        <button class="primary-cta" [routerLink]="['/etudiants', courId]">
+          <i class="fa-solid fa-users" style="margin-right: 5px;"></i> Liste des Étudiants
+        </button>
+      </div>
     </div>
 
     <!-- Contenu principal pour les devoirs et documents -->
@@ -401,27 +407,44 @@ input[type="file"]::file-selector-button:hover {
             <input type="file" (change)="onFileChange($event)" accept="application/pdf" multiple required />
           </label>
           <br>
-        </div>
-        <div class="card-button-wrapper">
-          <div *ngIf="!isDateExpired(selectedDevoir.dateLimite)">
-            <button class="card-button primary" type="submit">Rendre</button>
           </div>
-          <div *ngIf="isDateExpired(selectedDevoir.dateLimite)">
-            <p>{{selectedDevoir.dateLimite}}</p>
-            <div class="message-error">
-              <div class="message-icon">
-                <i class="fa fa-exclamation-triangle"></i>
+          <div class="card-button-wrapper">
+            <!-- Afficher le bouton "Rendre" si la date limite n'est pas expirée et que le statut est "en attente" -->
+            <div *ngIf="!isDateExpired(selectedDevoir.dateLimite) && selectedDevoir.statut === 'en attente'">
+              <button class="card-button primary" type="submit">Rendre</button>
+            </div>
+          
+            <!-- Afficher un message d'erreur si la date limite est expirée -->
+            <div *ngIf="isDateExpired(selectedDevoir.dateLimite)">
+              <p>{{ selectedDevoir.dateLimite }}</p>
+              <div class="message-error">
+                <div class="message-icon">
+                  <i class="fa fa-exclamation-triangle"></i>
+                </div>
+                <div class="message-text">
+                  <p><strong>Attention !</strong> La date limite pour rendre ce devoir est dépassée. Vous ne pouvez plus le soumettre.</p>
+                </div>
               </div>
-              <div class="message-text">
-                <p><strong>Attention !</strong> La date limite pour rendre ce devoir est dépassée. Vous ne pouvez plus le soumettre.</p>
+            </div>
+          
+            <!-- Afficher un message d'information si le statut est "terminé" mais la date limite n'est pas expirée -->
+            <div *ngIf="!isDateExpired(selectedDevoir.dateLimite) && selectedDevoir.statut === 'terminé'">
+              <div class="message-warning">
+                <div class="message-icon">
+                  <i class="fa fa-info-circle"></i>
+                </div>
+                <div class="message-text">
+                  <p><strong>Information :</strong> L'enseignant a fermé ce dépôt avant la date limite.</p>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+          
       </form>
 
       <!-- Formulaire pour modifier un devoir déjà rendu -->
-      <form *ngIf="rendu" class="login-form" method="post" (ngSubmit)="updateDevoirRendu(f)" #f="ngForm">
+      <div>
+      <form *ngIf="rendu && !isDateExpired(selectedDevoir?.dateLimite)" class="login-form" method="post" (ngSubmit)="updateDevoirRendu(f)" #f="ngForm">
         <div class="card-content">
           <p class="card-heading">Compte rendu</p>
           <p class="card-description">Vous avez déjà rendu votre devoir</p>
@@ -435,8 +458,22 @@ input[type="file"]::file-selector-button:hover {
         </div>
       </form>
 
+
+      <div *ngIf="isDateExpired(selectedDevoir?.dateLimite) && rendu">
+        <p>{{ selectedDevoir?.dateLimite}}</p>
+        <div class="message-error">
+          <div class="message-icon">
+            <i class="fa fa-exclamation-triangle"></i>
+          </div>
+          <div class="message-text">
+            <p><strong>Attention !</strong> La date limite pour rendre ce devoir est dépassée. Vous ne pouvez plus le modifier.</p>
+          </div>
+        </div>
+      </div>
+
+
       <!-- Boutons supplémentaires pour retirer ou télécharger -->
-      <button class="card-button primary" (click)="deleteDevoirRendu()" *ngIf="rendu">Retirer</button>
+      <button class="card-button primary" (click)="deleteDevoirRendu()" *ngIf="rendu && !isDateExpired(selectedDevoir?.dateLimite)">Retirer</button>
       <button class="card-button primary" (click)="downloadRenduPDF()" *ngIf="rendu">Télécharger</button>
 
       <!-- Bouton de fermeture de la popup -->
@@ -445,6 +482,7 @@ input[type="file"]::file-selector-button:hover {
           <path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"></path>
         </svg>
       </button>
+      </div>
     </div>
   </div>
 </body>

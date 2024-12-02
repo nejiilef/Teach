@@ -11,7 +11,7 @@
           <div class="notititle">{{sg.nom}}</div>
           <div class="notibody" *ngIf="sg.showEtudiants">
             <ul class="etudiants-list">
-              <li *ngFor="let e of sg.etudiants" class="etudiant-item">
+              <li *ngFor="let e of sg.etudiants; trackBy: trackByEmail" (click)="selectEtudiant(e.id)" [ngClass]="{ 'selected': selectedEtudiantId === e.id }" class="etudiant-item">
                 <p>{{e.email}}</p>
               </li>
             </ul>
@@ -30,6 +30,28 @@
     <div class="image-button-container">
       <img src="../../../assets/images/groupe.png" alt="Formation Image" class="image" />
       <button class="primary-cta" [routerLink]="['/sous-groupe', 'add']">+ Sous groupe</button>
+    </div>
+  </div>
+  <div *ngIf="isPopupVisible" class="popup-container">
+    <div class="popup-content">
+      <h2>Devoirs rendus de l'étudiant</h2>
+      <div *ngFor="let devoir of DevoirRenduDetails">
+        <p><b>Type de devoir :</b> {{ devoir.typedevoir }}</p>
+        <p><b>Description :</b> {{ devoir.description }}</p>
+        <p><b>Barème :</b></p>
+        <pre>{{ devoir.bareme }}</pre> <!-- Utilisation de <pre> pour conserver le formatage -->
+        <p><b>Note :</b> {{ devoir.note }}</p>
+        <p><b>Pondération :</b> {{ devoir.ponderation }}</p>
+        <p><b>Date limite :</b> {{ devoir.dateLimite | date: 'dd/MM/yyyy' }}</p>
+        <p><b>Nombre maximum de documents :</b> {{ devoir.maxDocuments }}</p>
+        <p><b>Statut :</b> {{ devoir.statut }}</p>
+        <p><b>Commentaire :</b> {{ devoir.commentaire }}</p>
+        <hr />
+      </div>
+      <div *ngIf="selectedEtudiantId && DevoirRenduDetails.length === 0">
+        <p>Aucun devoir rendu trouvé pour cet étudiant.</p>
+      </div>
+      <button (click)="closePopup()">Fermer</button>
     </div>
   </div>
 </body>

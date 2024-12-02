@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.UUID;
 
@@ -226,5 +227,18 @@ public class CourService implements IcourService {
 	    System.out.print(nb[0]);
 	    return nb[0] > 0 ? somme[0] / nb[0] : 0;
 	}
+	@Override
+	public Set<Etudiant> getStudentsByCourId(Integer courId) {
+		 // Trouver le cours par son ID
+        Cour cour = courrep.findById(courId).orElse(null);
+        
+        if (cour != null) {
+            // Retourner la liste des étudiants associés au cours
+            return cour.getStudents();
+        }
+        
+        return null;  // Si le cours n'est pas trouvé
+	}
+
 
 }

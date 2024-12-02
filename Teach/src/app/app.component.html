@@ -5,6 +5,7 @@
       <div class="logo">
         <h1 class="TeachHub">TeachHub</h1>
       </div>
+      
       <div class="button-container" *ngIf="dev">
         <button class="nav-link" [routerLink]="['/devoirs', 'add']">
 <i class="fa-solid fa-plus"></i><b>Devoir</b>
@@ -23,7 +24,12 @@
           <b>Sous groupe</b>
         </button>
       </div>
-      
+      <div class="button-container">
+        
+        <button class="nav-link" (click)="logout()">
+          <b>Se déconnecter</b>
+        </button>
+      </div>
     </div>
   </div>
 </nav>

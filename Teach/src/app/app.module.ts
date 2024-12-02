@@ -11,10 +11,11 @@ import { MessageModule } from 'primeng/message';
 
 import { AddEtudiantSousGroupeComponent } from './sous-groupe/add-etudiant-sous-groupe/add-etudiant-sous-groupe.component';
 import { FormsModule } from '@angular/forms';
+import { EtudiantsComponent } from './etudiants/etudiants.component';
 @NgModule({
   declarations: [
     AppComponent,
-    
+    EtudiantsComponent
   ],
   imports: [
     BrowserModule,

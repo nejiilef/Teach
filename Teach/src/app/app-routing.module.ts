@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { EtudiantsComponent } from './etudiants/etudiants.component';
 
 const routes: Routes = [
   {path:'auth',loadChildren:()=>import('./auth/auth.module' ).then(m=>m.AuthModule)},
@@ -8,7 +9,7 @@ const routes: Routes = [
   {path:'sous-groupe',loadChildren:()=>import('./sous-groupe/sous-groupe.module' ).then(m=>m.SousGroupeModule)},
   {path:'devoirRendu',loadChildren:()=>import('./devoir-rendu/devoir-rendu.module' ).then(m=>m.DevoirRenduModule)},
   
-  
+  { path:'etudiants/:courId', component: EtudiantsComponent },
   {
     path:'',redirectTo:'auth/login',pathMatch:'full',
   }

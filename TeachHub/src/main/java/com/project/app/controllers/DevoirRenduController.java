@@ -27,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 import com.project.app.dto.DevoirRenduDTO;
+import com.project.app.dto.DevoirRenduDetails;
 import com.project.app.dto.EvaluationDTO;
 import com.project.app.models.DevoirRendu;
 import com.project.app.services.jwt.DevoirRenduService;
@@ -241,5 +242,11 @@ public class DevoirRenduController {
 	     // Ajoutez les autres champs nécessaires
 
 	     return ResponseEntity.ok(devoirRenduDTO);
+	 }
+	 @GetMapping("/cours/{idCours}/etudiant/{idEtudiant}")
+	 public List<DevoirRenduDetails> getDevoirsRendus(
+	         @PathVariable Long idCours,
+	         @PathVariable Long idEtudiant) {
+	     return devoirRenduService.getDevoirsRendusWithCommentsAndNotes(idCours, idEtudiant);
 	 }
 }

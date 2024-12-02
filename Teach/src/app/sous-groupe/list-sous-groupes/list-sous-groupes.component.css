@@ -127,4 +127,141 @@ body {
       width: 100%;
     }
   }
+  .popup-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50%; /* Largeur fixe de la fenêtre */
+    max-width: 600px; /* Largeur maximale */
+    height: 70%; /* Hauteur fixe de la fenêtre */
+    background-color: white;
+    border: 1px solid #ddd;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    border-radius: 8px;
+    overflow: hidden; /* Empêche le contenu de déborder */
+  }
+  
+  /* Zone de contenu défilable */
+  .popup-content {
+    padding: 20px;
+    height: 100%;
+    overflow-y: auto; /* Permet le défilement vertical si le contenu dépasse */
+    box-sizing: border-box; /* Inclut le padding dans la hauteur totale */
+  }
+  
+  /* Style pour le bouton "Fermer" */
+  .popup-content button {
+    display: block;
+    margin: 20px auto 0;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .popup-content button:hover {
+    background-color: #0056b3;
+  }
+  /* Conteneur principal de la fenêtre */
+.popup-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50%;
+    max-width: 600px;
+    height: 70%;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Contenu scrollable de la fenêtre */
+  .popup-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+    color: #333;
+  }
+  
+  /* Titre de la fenêtre */
+  .popup-content h2 {
+    font-size: 1.8em;
+    margin-bottom: 20px;
+    color: #0056b3;
+    text-align: center;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 10px;
+  }
+  
+  /* Informations clés (type, description, etc.) */
+  .popup-content p {
+    margin: 8px 0;
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+  
+  .popup-content p b {
+    color: #0056b3;
+  }
+  
+  /* Section barème */
+  .popup-content pre {
+    background: #f9f9f9;
+    border-left: 4px solid #0056b3;
+    padding: 10px;
+    margin: 8px 0;
+    font-size: 0.95rem;
+    font-family: 'Courier New', Courier, monospace;
+    white-space: pre-wrap; /* Pour gérer les longues lignes */
+  }
+  
+  /* Séparation entre les devoirs */
+  .popup-content hr {
+    border: none;
+    border-top: 1px solid #e0e0e0;
+    margin: 20px 0;
+  }
+  
+  /* Bouton de fermeture */
+  .popup-content button {
+    background-color: #0056b3;
+    color: #fff;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin: 10px auto 0;
+    display: block;
+    width: fit-content;
+  }
+  
+  .popup-content button:hover {
+    background-color: #003d80;
+  }
+  
+  /* Style pour l'ensemble de la fenêtre */
+  .popup-container::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  .popup-container::-webkit-scrollbar-thumb {
+    background-color: #0056b3;
+    border-radius: 4px;
+  }
+  
+  .popup-container::-webkit-scrollbar-track {
+    background-color: #f0f0f0;
+  }
   

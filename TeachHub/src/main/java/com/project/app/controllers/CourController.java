@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.core.io.Resource; 
 import org.springframework.core.io.UrlResource;
@@ -32,6 +33,7 @@ import com.project.app.repository.EnseignantRepository;
 import com.project.app.services.jwt.EmailService;
 import com.project.app.services.jwt.IcourService;
 
+import com.project.app.models.Etudiant;
 
 
 
@@ -199,6 +201,10 @@ public class CourController {
     @GetMapping("/moyenneGenerale/{email}")
     public float calculMoyenneGenerale(@PathVariable String email) {
     	return this.courserv.calculMoyenneGenerale( email);
+    }
+    @GetMapping("/cours/{courId}/etudiants")
+    public Set<Etudiant> getEtudiantsByCourId(@PathVariable Integer courId) {
+        return courserv.getStudentsByCourId(courId);
     }
 
 }

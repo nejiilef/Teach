@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { SousGroupeService } from '../service/sous-groupe.service';
 import { Router } from '@angular/router';
 import { CoursService } from 'src/app/cours/service/cours.service';
 import { NgForm } from '@angular/forms';
+import { EtudiantService } from 'src/app/etudiants/services/etudiant.service';
 
+import { DevoirRenduDetails } from 'src/app/devoir-rendu/model/DevoirRenduDetails';
 @Component({
   selector: 'app-list-sous-groupes',
   templateUrl: './list-sous-groupes.component.html',
@@ -17,8 +19,11 @@ export class ListSousGroupesComponent implements OnInit {
   isPopupVisible = false;
   selectedEtudiant: any;
   idSg!: number;
+  selectedEtudiantId: number | null = null;
+  
+  DevoirRenduDetails: DevoirRenduDetails[] = [];
 
-  constructor(private service: SousGroupeService, private router: Router, private serviceCours: CoursService) {}
+  constructor(private etudiantService: EtudiantService,private service: SousGroupeService, private router: Router, private serviceCours: CoursService,private cdr: ChangeDetectorRef ) {}
 
   ngOnInit(): void {
     this.serviceCours.getCoursById(+localStorage.getItem("idCours")!).subscribe((c) => {
@@ -67,12 +72,37 @@ export class ListSousGroupesComponent implements OnInit {
           !this.allEtudiantsSg.some(sgStudent => sgStudent.email === student.email)
         );
       }
-    });
-  }
+    });}
   toggleEtudiants(idSousGroupe: number) {
     const subgroup = this.sgList.find(sg => sg.idSousGroupe === idSousGroupe);
     if (subgroup) {
       subgroup.showEtudiants = !subgroup.showEtudiants; // Toggle visibility
     }
+  }
+  selectEtudiant(id: number): void {
+    this.selectedEtudiantId = id;
+    this.isPopupVisible = true;
+    console.log('Étudiant sélectionné avec ID :', id);
+  
+    // Récupérer l'ID du cours depuis le localStorage
+    const coursId = +localStorage.getItem("idCours")!;
+    console.log('ID du cours récupéré du localStorage :', coursId);
+  
+    // Appeler le service pour récupérer les devoirs rendus
+    this.etudiantService.getDevoirsrenduWithCommentsAndNotes(coursId, id).subscribe(
+      (DevoirRenduDetails: DevoirRenduDetails[]) => {
+        // Stocker les devoirs rendus dans une variable
+        this.DevoirRenduDetails = DevoirRenduDetails;
+        console.log('Devoirs rendus récupérés avec succès :', DevoirRenduDetails);
+      },
+      (error: any) => {
+        // Gestion des erreurs
+        console.error('Erreur lors de la récupération des devoirs rendus :', error);
+      }
+    );
+  }
+  
+  trackByEmail(index: number, item: any): string {
+    return item.email; // Utilisez l'email ou un autre identifiant unique
   }
 }

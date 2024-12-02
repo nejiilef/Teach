@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.project.app.dto.DevoirRenduDTO;
+import com.project.app.dto.DevoirRenduDetails;
 import com.project.app.dto.EvaluationDTO;
 import com.project.app.models.DevoirRendu;
 
@@ -16,4 +17,5 @@ public interface IDevoirRenduService {
 	
 	 public Optional<DevoirRendu> findByDevoirIdAndEtudiantEmail(Long idDevoir, String email);
 	 public DevoirRendu evaluerDevoir(EvaluationDTO evaluationDTO);
+	List<DevoirRenduDetails> getDevoirsRendusWithCommentsAndNotes(Long idCours, Long idEtudiant);
 }

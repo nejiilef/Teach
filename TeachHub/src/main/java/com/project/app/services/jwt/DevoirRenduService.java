@@ -15,6 +15,7 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 
 import com.project.app.dto.DevoirRenduDTO;
+import com.project.app.dto.DevoirRenduDetails;
 import com.project.app.dto.DevoirRenduResponse;
 import com.project.app.dto.EvaluationDTO;
 import com.project.app.models.Devoir;
@@ -213,5 +214,32 @@ float p=devoirRendu.getDevoir().getPonderation();
 	            .filter(dr -> dr.getDevoir().getIdDevoir().equals(idDevoir) && dr.getEtudiant().getEmail().equals(email))
 	            .findFirst();
 	}
+	@Transactional
+	@Override
+	public List<DevoirRenduDetails> getDevoirsRendusWithCommentsAndNotes(Long idCours, Long idEtudiant) {
+	    // Récupérer la liste complète des devoirs rendus pour le cours et l'étudiant
+	    List<DevoirRendu> allDevoirsRendus = devoirRenduRepository.findDevoirRenduByCoursAndEtudiant(idCours, idEtudiant);
+
+	    // Filtrer les devoirs ayant un commentaire et une note non nuls, puis mapper vers DevoirRenduDetails
+	    return allDevoirsRendus.stream()
+	            .filter(devoir -> devoir.getCommentaire() != null && devoir.getNote() != null)
+	            .map(devoirRendu -> {
+	                DevoirRenduDetails details = new DevoirRenduDetails();
+	                details.setIdDevoir(devoirRendu.getDevoir().getIdDevoir());
+	                details.setTypedevoir(devoirRendu.getDevoir().getTypedevoir());
+	                details.setDescription(devoirRendu.getDevoir().getDescription());
+	                details.setPonderation(devoirRendu.getDevoir().getPonderation());
+	                details.setBareme(devoirRendu.getDevoir().getBareme());
+	                details.setDateLimite(devoirRendu.getDevoir().getDateLimite());
+	                details.setStatut(devoirRendu.getDevoir().getStatut());
+	                details.setMaxDocuments(devoirRendu.getDevoir().getMaxDocuments());
+	                details.setCommentaire(devoirRendu.getCommentaire());
+	                details.setNote(devoirRendu.getNote());
+	                 
+	                return details;
+	            })
+	            .collect(Collectors.toList());
+	}
+
 
 }
